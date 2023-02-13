@@ -1,0 +1,38 @@
+{
+  "type": "Compass Connections",
+  "version": {
+    "$numberInt": "1"
+  },
+  "connections": [
+    {
+      "id": "67a797bf-30ca-4f09-85a0-08992aee320e",
+      "connectionOptions": {
+        "connectionString": "mongodb://nunjo:dougals@localhost:27017/?authMechanism=DEFAULT"
+      },
+      "favorite": {
+        "name": "Docker",
+        "color": "color6"
+      },
+      "lastUsed": {
+        "$date": {
+          "$numberLong": "1676309915217"
+        }
+      }
+    },
+    {
+      "id": "12f3f0cd-92a1-4d47-ba61-252ddacb81a4",
+      "connectionOptions": {
+        "connectionString": "mongodb+srv://nunjo:dougals@cluster0.kp36kka.mongodb.net/?retryWrites=true&w=majority"
+      },
+      "favorite": {
+        "name": "Atlas",
+        "color": "color6"
+      },
+      "lastUsed": {
+        "$date": {
+          "$numberLong": "1676320352873"
+        }
+      }
+    }
+  ]
+}

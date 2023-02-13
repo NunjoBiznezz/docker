@@ -1,0 +1,248 @@
+[{
+  "_id": {
+    "$oid": "63e9ac2ac157bf3170de2011"
+  },
+  "name": "Brookwood",
+  "address": {
+    "city": "Fort Wayne",
+    "state": "IN",
+    "country": "US"
+  },
+  "courseType": "Regulation",
+  "holes": 18,
+  "_class": "course"
+},{
+  "_id": {
+    "$oid": "63e9ac2ac157bf3170de2012"
+  },
+  "name": "Cedar Creek",
+  "address": {
+    "city": "Leo",
+    "state": "IN",
+    "country": "US"
+  },
+  "courseType": "Regulation",
+  "holes": 18,
+  "_class": "course"
+},{
+  "_id": {
+    "$oid": "63e9ac2ac157bf3170de2013"
+  },
+  "name": "Autumn Ridge Golf Club",
+  "address": {
+    "city": "Fort Wayne",
+    "state": "IN",
+    "country": "US"
+  },
+  "courseType": "Regulation",
+  "holes": 18,
+  "_class": "course"
+},{
+  "_id": {
+    "$oid": "63e9ac2ac157bf3170de2014"
+  },
+  "name": "Cherry Hill",
+  "address": {
+    "city": "Fort Wayne",
+    "state": "IN",
+    "country": "US"
+  },
+  "courseType": "Regulation",
+  "holes": 18,
+  "_class": "course"
+},{
+  "_id": {
+    "$oid": "63e9ac2ac157bf3170de2015"
+  },
+  "name": "Riverbend",
+  "address": {
+    "city": "Fort Wayne",
+    "state": "IN",
+    "country": "US"
+  },
+  "courseType": "Regulation",
+  "holes": 18,
+  "_class": "course"
+},{
+  "_id": {
+    "$oid": "63e9ac2ac157bf3170de2016"
+  },
+  "name": "Chestnut Hills",
+  "address": {
+    "city": "Fort Wayne",
+    "state": "IN",
+    "country": "US"
+  },
+  "courseType": "Regulation",
+  "holes": 18,
+  "_class": "course"
+},{
+  "_id": {
+    "$oid": "63e9ac2ac157bf3170de2017"
+  },
+  "name": "Foster Park",
+  "address": {
+    "city": "Fort Wayne",
+    "state": "IN",
+    "country": "US"
+  },
+  "courseType": "Regulation",
+  "holes": 18,
+  "_class": "course"
+},{
+  "_id": {
+    "$oid": "63e9ac2ac157bf3170de2018"
+  },
+  "name": "Colonial Oaks",
+  "address": {
+    "city": "Fort Wayne",
+    "state": "IN",
+    "country": "US"
+  },
+  "courseType": "Regulation",
+  "holes": 18,
+  "_class": "course"
+},{
+  "_id": {
+    "$oid": "63e9ac2ac157bf3170de2019"
+  },
+  "name": "McMillen Park",
+  "address": {
+    "city": "Fort Wayne",
+    "state": "IN",
+    "country": "US"
+  },
+  "courseType": "Regulation",
+  "holes": 18,
+  "_class": "course"
+},{
+  "_id": {
+    "$oid": "63e9ac2ac157bf3170de201a"
+  },
+  "name": "Shoaff Park",
+  "address": {
+    "city": "Fort Wayne",
+    "state": "IN",
+    "country": "US"
+  },
+  "courseType": "Regulation",
+  "holes": 18,
+  "_class": "course"
+},{
+  "_id": {
+    "$oid": "63e9ac2ac157bf3170de201b"
+  },
+  "name": "Orchard Ridge Country Club",
+  "address": {
+    "city": "Fort Wayne",
+    "state": "IN",
+    "country": "US"
+  },
+  "courseType": "Regulation",
+  "holes": 18,
+  "_class": "course"
+},{
+  "_id": {
+    "$oid": "63e9ac2ac157bf3170de201c"
+  },
+  "name": "Fort Wayne Country Club",
+  "address": {
+    "city": "Fort Wayne",
+    "state": "IN",
+    "country": "US"
+  },
+  "courseType": "Regulation",
+  "holes": 18,
+  "_class": "course"
+},{
+  "_id": {
+    "$oid": "63e9ac2ac157bf3170de201d"
+  },
+  "name": "Sycamore Hills Country Club",
+  "address": {
+    "city": "Fort Wayne",
+    "state": "IN",
+    "country": "US"
+  },
+  "courseType": "Regulation",
+  "holes": 18,
+  "_class": "course"
+},{
+  "_id": {
+    "$oid": "63e9ac2ac157bf3170de201e"
+  },
+  "name": "Noble Hawk",
+  "address": {
+    "city": "Kendallville",
+    "state": "IN",
+    "country": "US"
+  },
+  "courseType": "Regulation",
+  "holes": 18,
+  "_class": "course"
+},{
+  "_id": {
+    "$oid": "63e9ac2ac157bf3170de201f"
+  },
+  "name": "Cobblestone",
+  "address": {
+    "city": "Kendallville",
+    "state": "IN",
+    "country": "US"
+  },
+  "courseType": "Regulation",
+  "holes": 18,
+  "_class": "course"
+},{
+  "_id": {
+    "$oid": "63e9ac2ac157bf3170de2020"
+  },
+  "name": "Trine University",
+  "address": {
+    "city": "Fort Wayne",
+    "state": "IN",
+    "country": "US"
+  },
+  "courseType": "Regulation",
+  "holes": 18,
+  "_class": "course"
+},{
+  "_id": {
+    "$oid": "63e9ac2ac157bf3170de2021"
+  },
+  "name": "Glendarin Hills",
+  "address": {
+    "city": "Angola",
+    "state": "IN",
+    "country": "US"
+  },
+  "courseType": "Regulation",
+  "holes": 18,
+  "_class": "course"
+},{
+  "_id": {
+    "$oid": "63e9ac2bc157bf3170de2022"
+  },
+  "name": "Bella Vista Golf",
+  "address": {
+    "city": "Coldwater",
+    "state": "MI",
+    "country": "US"
+  },
+  "courseType": "Regulation",
+  "holes": 18,
+  "_class": "course"
+},{
+  "_id": {
+    "$oid": "63e9ac2bc157bf3170de2023"
+  },
+  "name": "Eagle Eye",
+  "address": {
+    "city": "Fort Wayne",
+    "state": "IN",
+    "country": "US"
+  },
+  "courseType": "Regulation",
+  "holes": 18,
+  "_class": "course"
+}]
