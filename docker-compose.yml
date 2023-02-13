@@ -1,52 +1,148 @@
-version: '3'
+version: '3.3'
+
 services:
-    mongodb:
-        container_name: db
-        image: mongo
-        ports:
-            - "27017:27017"
-        #    command: mongod --smallfiles --auth --bind_ip_all
-        environment:
-            MONGO_INITDB_ROOT_USERNAME: nunjo
-            MONGO_INITDB_ROOT_PASSWORD: dougals
-        volumes:
-            - ./data:/data/db
-        labels:
-            - "traefik.enable=true"
-            - 'traefik.tcp.routers.mongo.rule=HostSNI(`*`)'
-            - 'traefik.tcp.routers.mongo.entrypoint=mongo'
-            - 'traefik.tcp.services.mongo.loadbalancer.server.port=27017'
 
-    middleware:
-        image: docker.io/traefik:v2.9
-        container_name: traefik
-        command:
-            - "--api.insecure=true"
-            - "--providers.docker=true"
-            - "--providers.docker.exposedbydefault=false"
-            - "--entrypoints.web.address=:80"
-            - "--entrypoints.db.address=:27017"
-        ports:
-            - "80:80"
-            - "8080:8080"
-            - "8443:443"
-            - "3306:3306"
-        volumes:
-            - "/var/run/docker.sock:/var/run/docker.sock:ro"
-        labels:
-            - "traefik.enable=true"
-            - "traefik.http.services.traefik.loadbalancer.server.port=8080"
-            - "traefik.http.routers.traefik.entrypoints=web"
-            - "traefik.http.routers.traefik.rule=Host(`traefik.localhost`)"
+#  resource:
+#    build:
+#      context: .
+#      dockerfile: Dockerfile
+#    container_name: play-golf-resource
+#    restart: always
+#    depends_on:
+#      - db
+#    environment:
+#      DB_HOST: db
+#      DB_PORT: 3306
+#      DB_SCHEMA: playgolf
+#    ports:
+#      - 4000
+#    labels:
+#      - "traefik.enable=true"
+#      - "traefik.http.services.play-golf-resource.loadbalancer.server.port=4000"
+#      - "traefik.http.routers.play-golf-resource.entrypoints=web"
+#      - "traefik.http.routers.play-golf-resource.rule=Host(`resources.localhost`)"
+#      - "traefik.http.middlewares.play-golf-resource-codespaces.stripprefix.prefixes=/resources"
+#      - "traefik.http.routers.play-golf-resource-codespaces.rule=PathPrefix(`/resources`)"
+#      - "traefik.http.routers.play-golf-resource-codespaces.middlewares=play-golf-resource-codespaces@docker"
 
-    whoami:
-        image: "traefik/whoami"
-        container_name: "simple-service"
-        labels:
-            - "traefik.enable=true"
-            - "traefik.http.routers.whoami.entrypoints=web"
-            - "traefik.http.routers.whoami.rule=Host(`whoami.localhost`)"
-            - "traefik.http.middlewares.whoami-codespaces.stripprefix.prefixes=/whoami"
-            - "traefik.http.routers.whoami-codespaces.rule=PathPrefix(`/whoami`)"
-            - "traefik.http.routers.whoami-codespaces.middlewares=whoami-codespaces@docker"
+  mongodb:
+    container_name: mongodb
+    image: mongo
+    ports:
+      - "27017:27017"
+    #    command: mongod --smallfiles --auth --bind_ip_all
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: nunjo
+      MONGO_INITDB_ROOT_PASSWORD: dougals
+    volumes:
+      - ./data/mongodb:/data/mongodb
+    labels:
+      - "traefik.enable=true"
+      - 'traefik.tcp.routers.mongo.rule=HostSNI(`*`)'
+      - 'traefik.tcp.routers.mongo.entrypoint=mongo'
+      - 'traefik.tcp.services.mongo.loadbalancer.server.port=27017'
 
+  db:
+    image: mysql
+    container_name: db
+    # NOTE: use of "mysql_native_password" is not recommended: https://dev.mysql.com/doc/refman/8.0/en/upgrading-from-previous-series.html#upgrade-caching-sha2-password
+    # (this is just an example, not intended to be a production configuration)
+    command: --default-authentication-plugin=mysql_native_password
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: password
+      MYSQL_DATABASE: sandbox
+    ports:
+      - 3306
+    volumes:
+        - mysql_data:/var/lib/mysql
+        - ./mock/database/mysql/sql:/docker-entrypoint-initdb.d
+        - ./mock/database/mysql/sql_conf:/etc/mysql/conf.d
+    labels:
+      - "traefik.enable=true"
+      - "traefik.tcp.routers.mysql-db.entrypoints=mysql"
+      - "traefik.tcp.routers.mysql-db.rule=HostSNI(`*`)"
+      - "traefik.tcp.routers.mysql-db.tls=false"
+      
+  db_dashboard:
+    image: adminer
+    container_name: adminer
+    restart: always
+    ports:
+      - 8080
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.db-dashboard.entrypoints=web"
+      - "traefik.http.routers.db-dashboard.rule=Host(`db.localhost`)"
+      - "traefik.http.middlewares.db-dashboard-codespaces.stripprefix.prefixes=/db"
+      - "traefik.http.routers.db-dashboard-codespaces.rule=PathPrefix(`/db`)"
+      - "traefik.http.routers.db-dashboard-codespaces.middlewares=db-dashboard-codespaces@docker"
+
+  middleware:
+    image: docker.io/traefik:v2.9
+    container_name: traefik
+    command:
+      - "--api.insecure=true"
+      - "--providers.docker=true"
+      - "--providers.docker.exposedbydefault=false"
+      - "--entrypoints.web.address=:80"
+      - "--entrypoints.mysql.address=:3306"
+      - "--entrypoints.mongodb.address=:27017"
+    ports:
+      - "80:80"
+      - "8080:8080"
+      - "8443:443"
+      - "3306:3306"
+    volumes:
+      - "/var/run/docker.sock:/var/run/docker.sock:ro"
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.services.traefik.loadbalancer.server.port=8080"
+      - "traefik.http.routers.traefik.entrypoints=web"
+      - "traefik.http.routers.traefik.rule=Host(`traefik.localhost`)"
+      
+  whoami:
+    image: "traefik/whoami"
+    container_name: "simple-service"
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.whoami.entrypoints=web"
+      - "traefik.http.routers.whoami.rule=Host(`whoami.localhost`)"
+      - "traefik.http.middlewares.whoami-codespaces.stripprefix.prefixes=/whoami"
+      - "traefik.http.routers.whoami-codespaces.rule=PathPrefix(`/whoami`)"
+      - "traefik.http.routers.whoami-codespaces.middlewares=whoami-codespaces@docker"
+
+  keycloak:
+    image: quay.io/keycloak/keycloak:20.0.3
+    container_name: keycloak
+    command: start-dev
+    environment:
+      KC_PROXY: edge
+      KC_DB: mysql
+      KC_DB_USERNAME: keycloak
+      KC_DB_PASSWORD: password
+      KC_DB_URL: jdbc:mysql://db:3306/keycloak
+      KC_DB_SCHEMA: keycloak
+      KC_HOSTNAME: keycloak.localhost
+      KC_HOSTNAME_STRICT_HTTPS: false
+      KC_HOSTNAME_STRICT: false
+      KC_HOSTNAME_STRICT_BACKCHANNEL: true
+      KC_HTTP_ENABLED: true
+      KC_PROXY_ADDRESS_FORWARDING: true
+      KEYCLOAK_ADMIN: admin
+      KEYCLOAK_ADMIN_PASSWORD: password
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.keycloak.entrypoints=web"
+      - "traefik.http.routers.keycloak.rule=Host(`keycloak.localhost`)"
+      - "traefik.http.middlewares.keycloak-codespaces.stripprefix.prefixes=/keycloak"
+      - "traefik.http.routers.keycloak-codespaces.rule=PathPrefix(`/keycloak`)"
+      - "traefik.http.routers.keycloak-codespaces.middlewares=keycloak-codespaces@docker"
+    ports:
+      - 8080
+    depends_on:
+      - db
+
+volumes:
+  mysql_data:
+    driver: local
