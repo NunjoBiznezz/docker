@@ -1,0 +1,22 @@
+version: '3'
+services:
+    mongodb:
+        container_name: db
+        image: mongo
+        ports:
+            - "27017:27017"
+        #    command: mongod --smallfiles --auth --bind_ip_all
+        environment:
+            MONGO_INITDB_ROOT_USERNAME: nunjo
+            MONGO_INITDB_ROOT_PASSWORD: dougals
+        volumes:
+            - ./data:/data/db
+#        networks:
+#            - mongodb_network
+
+#    healthcheck:
+#        test: echo 'db.runCommand("ping").ok' | mongo 10.10.10.60:27017/test --quiet
+#        interval: 30s
+#        timeout: 10s
+#        retries: 3
+#        restart: unless-stopped
