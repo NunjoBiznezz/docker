@@ -11,12 +11,42 @@ services:
             MONGO_INITDB_ROOT_PASSWORD: dougals
         volumes:
             - ./data:/data/db
-#        networks:
-#            - mongodb_network
+        labels:
+            - "traefik.enable=true"
+            - 'traefik.tcp.routers.mongo.rule=HostSNI(`*`)'
+            - 'traefik.tcp.routers.mongo.entrypoint=mongo'
+            - 'traefik.tcp.services.mongo.loadbalancer.server.port=27017'
 
-#    healthcheck:
-#        test: echo 'db.runCommand("ping").ok' | mongo 10.10.10.60:27017/test --quiet
-#        interval: 30s
-#        timeout: 10s
-#        retries: 3
-#        restart: unless-stopped
+    middleware:
+        image: docker.io/traefik:v2.9
+        container_name: traefik
+        command:
+            - "--api.insecure=true"
+            - "--providers.docker=true"
+            - "--providers.docker.exposedbydefault=false"
+            - "--entrypoints.web.address=:80"
+            - "--entrypoints.db.address=:27017"
+        ports:
+            - "80:80"
+            - "8080:8080"
+            - "8443:443"
+            - "3306:3306"
+        volumes:
+            - "/var/run/docker.sock:/var/run/docker.sock:ro"
+        labels:
+            - "traefik.enable=true"
+            - "traefik.http.services.traefik.loadbalancer.server.port=8080"
+            - "traefik.http.routers.traefik.entrypoints=web"
+            - "traefik.http.routers.traefik.rule=Host(`traefik.localhost`)"
+
+    whoami:
+        image: "traefik/whoami"
+        container_name: "simple-service"
+        labels:
+            - "traefik.enable=true"
+            - "traefik.http.routers.whoami.entrypoints=web"
+            - "traefik.http.routers.whoami.rule=Host(`whoami.localhost`)"
+            - "traefik.http.middlewares.whoami-codespaces.stripprefix.prefixes=/whoami"
+            - "traefik.http.routers.whoami-codespaces.rule=PathPrefix(`/whoami`)"
+            - "traefik.http.routers.whoami-codespaces.middlewares=whoami-codespaces@docker"
+
