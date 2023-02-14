@@ -27,13 +27,10 @@ services:
 
   db:
     image: mysql
-    build:
-      context: .
-      dockerfile: mysql/Dockerfile
     container_name: db
     # NOTE: use of "mysql_native_password" is not recommended: https://dev.mysql.com/doc/refman/8.0/en/upgrading-from-previous-series.html#upgrade-caching-sha2-password
     # (this is just an example, not intended to be a production configuration)
-    command: --default-authentication-plugin=mysql_native_password --init-file /docker-entrypoint-initdb.d/init.sql
+    command: --default-authentication-plugin=mysql_native_password
     restart: always
     environment:
       MYSQL_DATABASE: play_golf
@@ -44,28 +41,28 @@ services:
       - 3306:3306
     volumes:
         - mysql_data:/var/lib/mysql
-        - ./mysql/sql:/docker-entrypoint-initdb.d
-        # - ./mysql/conf:/etc/mysql/conf.d
+        - ./mysql/sql:/docker-entrypoint-initdb.d/1.sql
+        - ./mysql/conf/:/etc/mysql/conf.d/
     labels:
       - "traefik.enable=true"
       - "traefik.tcp.routers.mysql-db.entrypoints=mysql"
       - "traefik.tcp.routers.mysql-db.rule=HostSNI(`*`)"
       - "traefik.tcp.routers.mysql-db.tls=false"
       
-#  db_dashboard:
-#    image: adminer
-#    container_name: adminer
-#    restart: always
-#    ports:
-#      - 4300:8080
-#    labels:
-#      - "traefik.enable=true"
-#      - "traefik.http.routers.db-dashboard.entrypoints=web"
-#      - "traefik.http.routers.db-dashboard.rule=Host(`db.localhost`)"
-#      - "traefik.http.middlewares.db-dashboard-codespaces.stripprefix.prefixes=/db"
-#      - "traefik.http.routers.db-dashboard-codespaces.rule=PathPrefix(`/db`)"
-#      - "traefik.http.routers.db-dashboard-codespaces.middlewares=db-dashboard-codespaces@docker"
-#
+  adminer:
+    image: adminer
+    container_name: adminer
+    restart: always
+    ports:
+      - 4300:8080
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.adminer.entrypoints=web"
+      - "traefik.http.routers.adminer.rule=Host(`db.localhost`)"
+      - "traefik.http.middlewares.adminer-codespaces.stripprefix.prefixes=/db"
+      - "traefik.http.routers.adminer-codespaces.rule=PathPrefix(`/db`)"
+      - "traefik.http.routers.adminer-codespaces.middlewares=adminer-codespaces@docker"
+
 #  middleware:
 #    image: docker.io/traefik:v2.9
 #    container_name: traefik
