@@ -55,11 +55,14 @@ services:
   keycloak:
     image: quay.io/keycloak/keycloak:20.0.3
     container_name: keycloak
+    build:
+      context: .
+      dockerfile: ./keycloak/Dockerfile
     command:
       - start-dev
       - --import-realm
-    volumes:
-      - ./keycloak/realm.json:/opt/keycloak/data/import/realm.json
+#    volumes:
+#      - ./keycloak/realm.json:/opt/keycloak/data/import/realm.json
     environment:
       KC_PROXY: edge
       KC_DB: mysql
