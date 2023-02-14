@@ -9,7 +9,7 @@ RUN touch /var/log/mysql/mysqld.log
 # .\conf being your relative host path from this Dockerfile
 # \etc\mysql\conf.d\ being the VM path
 COPY mysql/conf/mysql.cnf /etc/mysql/conf.d/
+COPY mysql/sql/init.sql /tmp/
 
-# Make the conf files not writeable so mysql will read them
-RUN chmod 0444 /etc/mysql/conf.d/*
-
+## Annoying lack of ll
+#RUN echo 'alias ll="ls -la --color"' >> ~/.bashrc
