@@ -38,7 +38,7 @@ services:
       MYSQL_PASSWORD: dougals
       MYSQL_ROOT_PASSWORD: password
     ports:
-      - 3306:3306
+      - 3306
     volumes:
         - mysql_data:/var/lib/mysql
         - ./mysql/sql:/docker-entrypoint-initdb.d/1.sql
@@ -49,43 +49,43 @@ services:
       - "traefik.tcp.routers.mysql-db.rule=HostSNI(`*`)"
       - "traefik.tcp.routers.mysql-db.tls=false"
       
-  adminer:
-    image: adminer
-    container_name: adminer
-    restart: always
-    ports:
-      - 4300:8080
-    labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.adminer.entrypoints=web"
-      - "traefik.http.routers.adminer.rule=Host(`db.localhost`)"
-      - "traefik.http.middlewares.adminer-codespaces.stripprefix.prefixes=/db"
-      - "traefik.http.routers.adminer-codespaces.rule=PathPrefix(`/db`)"
-      - "traefik.http.routers.adminer-codespaces.middlewares=adminer-codespaces@docker"
+  # adminer:
+  #   image: adminer
+  #   container_name: adminer
+  #   restart: always
+  #   ports:
+  #     - 8080:8080
+  #   labels:
+  #     - "traefik.enable=true"
+  #     - "traefik.http.routers.adminer.entrypoints=web"
+  #     - "traefik.http.routers.adminer.rule=Host(`db.localhost`)"
+  #     - "traefik.http.middlewares.adminer-codespaces.stripprefix.prefixes=/db"
+  #     - "traefik.http.routers.adminer-codespaces.rule=PathPrefix(`/db`)"
+  #     - "traefik.http.routers.adminer-codespaces.middlewares=adminer-codespaces@docker"
 
-#  middleware:
-#    image: docker.io/traefik:v2.9
-#    container_name: traefik
-#    command:
-#      - "--api.insecure=true"
-#      - "--providers.docker=true"
-#      - "--providers.docker.exposedbydefault=false"
-#      - "--entrypoints.web.address=:80"
-#      - "--entrypoints.mysql.address=:3306"
-#      - "--entrypoints.mongodb.address=:27017"
-#    ports:
-#      - "80:80"
-#      - "8080:8080"
-#      - "8443:443"
-#      - "3306:3306"
-#    volumes:
-#      - "/var/run/docker.sock:/var/run/docker.sock:ro"
-#    labels:
-#      - "traefik.enable=true"
-#      - "traefik.http.services.traefik.loadbalancer.server.port=9090"
-#      - "traefik.http.routers.traefik.entrypoints=web"
-#      - "traefik.http.routers.traefik.rule=Host(`traefik.localhost`)"
-#
+  # middleware:
+  #   image: docker.io/traefik:v2.9
+  #   container_name: traefik
+  #   command:
+  #     - "--api.insecure=true"
+  #     - "--providers.docker=true"
+  #     - "--providers.docker.exposedbydefault=false"
+  #     - "--entrypoints.web.address=:80"
+  #     - "--entrypoints.mysql.address=:3306"
+  #     - "--entrypoints.mongodb.address=:27017"
+  #   ports:
+  #     - "80:80"
+  #     - "8080:8080"
+  #     - "8443:443"
+  #     - "3306:3306"
+  #   volumes:
+  #     - "/var/run/docker.sock:/var/run/docker.sock:ro"
+  #   labels:
+  #     - "traefik.enable=true"
+  #     - "traefik.http.services.traefik.loadbalancer.server.port=9090"
+  #     - "traefik.http.routers.traefik.entrypoints=web"
+  #     - "traefik.http.routers.traefik.rule=Host(`traefik.localhost`)"
+
 #  whoami:
 #    image: "traefik/whoami"
 #    container_name: "simple-service"
@@ -96,38 +96,39 @@ services:
 #      - "traefik.http.middlewares.whoami-codespaces.stripprefix.prefixes=/whoami"
 #      - "traefik.http.routers.whoami-codespaces.rule=PathPrefix(`/whoami`)"
 #      - "traefik.http.routers.whoami-codespaces.middlewares=whoami-codespaces@docker"
-#
-#  keycloak:
-#    image: quay.io/keycloak/keycloak:20.0.3
-#    container_name: keycloak
-#    command: start-dev
-#    environment:
-#      KC_PROXY: edge
-#      KC_DB: mysql
-#      KC_DB_USERNAME: keycloak
-#      KC_DB_PASSWORD: password
-#      KC_DB_URL: jdbc:mysql://db:3306/keycloak
-#      KC_DB_SCHEMA: keycloak
-#      KC_HOSTNAME: keycloak.localhost
-#      KC_HOSTNAME_STRICT_HTTPS: false
-#      KC_HOSTNAME_STRICT: false
-#      KC_HOSTNAME_STRICT_BACKCHANNEL: true
-#      KC_HTTP_ENABLED: true
-#      KC_PROXY_ADDRESS_FORWARDING: true
-#      KEYCLOAK_ADMIN: admin
-#      KEYCLOAK_ADMIN_PASSWORD: password
-#    labels:
-#      - "traefik.enable=true"
-#      - "traefik.http.routers.keycloak.entrypoints=web"
-#      - "traefik.http.routers.keycloak.rule=Host(`keycloak.localhost`)"
-#      - "traefik.http.middlewares.keycloak-codespaces.stripprefix.prefixes=/keycloak"
-#      - "traefik.http.routers.keycloak-codespaces.rule=PathPrefix(`/keycloak`)"
-#      - "traefik.http.routers.keycloak-codespaces.middlewares=keycloak-codespaces@docker"
-#    ports:
-#      - 8080
-#    depends_on:
-#      - db
-#
+
+  keycloak:
+    image: jboss/keycloak:16.1.0
+    container_name: keycloak
+    # command: ["start-dev", "--http-port=8888"]
+    environment:
+      KC_PROXY: edge
+      KC_DB: mysql
+      KC_DB_USERNAME: keycloak
+      KC_DB_PASSWORD: password
+      KC_DB_URL: jdbc:mysql://db:3306/keycloak
+      KC_DB_SCHEMA: keycloak
+      # KC_HOSTNAME: keycloak.localhost
+      # KC_HOSTNAME_STRICT_HTTPS: false
+      # KC_HOSTNAME_STRICT: false
+      # KC_HOSTNAME_STRICT_BACKCHANNEL: true
+      # KC_HTTP_ENABLED: true
+      # KC_PROXY_ADDRESS_FORWARDING: true
+      KEYCLOAK_ADMIN: admin
+      KEYCLOAK_ADMIN_PASSWORD: password
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.keycloak.entrypoints=web"
+      - "traefik.http.routers.keycloak.rule=Host(`keycloak.localhost`)"
+      - "traefik.http.middlewares.keycloak-codespaces.stripprefix.prefixes=/keycloak"
+      - "traefik.http.routers.keycloak-codespaces.rule=PathPrefix(`/keycloak`)"
+      - "traefik.http.routers.keycloak-codespaces.middlewares=keycloak-codespaces@docker"
+    ports:
+      - 8080
+      - 9990      
+    depends_on:
+      - db
+
 #  mongodb:
 #    container_name: mongodb
 #    image: mongo
