@@ -2,30 +2,30 @@ version: '3.3'
 
 services:
 
-  # Out of the box keycloak, not sure what database it is running but for now don't care
-  keycloak:
-    image: quay.io/keycloak/keycloak:20.0.3
-    container_name: keycloak
-    build:
-      context: .
-      dockerfile: ./keycloak/Dockerfile
-    command:
-      - start-dev
-      - --import-realm
-    environment:
-      KEYCLOAK_ADMIN: admin
-      KEYCLOAK_ADMIN_PASSWORD: admin
-    ports:
-      - "8080:8080"
-    volumes:
-      - ./keycloak/imports:/opt/keycloak/data/import
-    labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.keycloak.entrypoints=web"
-      - "traefik.http.routers.keycloak.rule=Host(`keycloak.localhost`)"
-      - "traefik.http.middlewares.keycloak-codespaces.stripprefix.prefixes=/keycloak"
-      - "traefik.http.routers.keycloak-codespaces.rule=PathPrefix(`/keycloak`)"
-      - "traefik.http.routers.keycloak-codespaces.middlewares=keycloak-codespaces@docker"
+#  # Out of the box keycloak, not sure what database it is running but for now don't care
+#  keycloak:
+#    image: quay.io/keycloak/keycloak:20.0.3
+#    container_name: keycloak
+#    build:
+#      context: .
+#      dockerfile: ./keycloak/Dockerfile
+#    command:
+#      - start-dev
+#      - --import-realm
+#    environment:
+#      KEYCLOAK_ADMIN: admin
+#      KEYCLOAK_ADMIN_PASSWORD: admin
+#    ports:
+#      - "8080:8080"
+#    volumes:
+#      - ./keycloak/imports:/opt/keycloak/data/import
+#    labels:
+#      - "traefik.enable=true"
+#      - "traefik.http.routers.keycloak.entrypoints=web"
+#      - "traefik.http.routers.keycloak.rule=Host(`keycloak.localhost`)"
+#      - "traefik.http.middlewares.keycloak-codespaces.stripprefix.prefixes=/keycloak"
+#      - "traefik.http.routers.keycloak-codespaces.rule=PathPrefix(`/keycloak`)"
+#      - "traefik.http.routers.keycloak-codespaces.middlewares=keycloak-codespaces@docker"
 
   # MongoDB backend for play-golf
   mongodb:
@@ -43,13 +43,19 @@ services:
     volumes:
       - ./data/mongodb:/data/mongodb
       - ./mongodb/import:/data/import
-      - ./mongodb/script:/docker-entrypoint-initdb.d
+      - ./mongodb/init:/docker-entrypoint-initdb.d
     labels:
       - "traefik.enable=true"
       - 'traefik.tcp.routers.mongo.rule=HostSNI(`*`)'
       - 'traefik.tcp.routers.mongo.entrypoint=mongo'
       - 'traefik.tcp.services.mongo.loadbalancer.server.port=27017'
 
+#  mongo_seed:
+#    build:
+#      context: .
+#      dockerfile: ./mongodb/import/Dockerfile
+#    depends_on:
+#      - mongodb
 
   #  resource:
 #    build:
