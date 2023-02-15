@@ -2,41 +2,37 @@ version: '3.3'
 
 services:
 
-#  # Out of the box keycloak, not sure what database it is running but for now don't care
-#  keycloak:
-#    image: quay.io/keycloak/keycloak:20.0.3
-#    container_name: keycloak
-#    build:
-#      context: .
-#      dockerfile: ./keycloak/Dockerfile
-#    command:
-#      - start-dev
-#      - --import-realm
-#    environment:
-#      KEYCLOAK_ADMIN: admin
-#      KEYCLOAK_ADMIN_PASSWORD: admin
-#    ports:
-#      - "8080:8080"
-#    volumes:
-#      - ./keycloak/imports:/opt/keycloak/data/import
-#    labels:
-#      - "traefik.enable=true"
-#      - "traefik.http.routers.keycloak.entrypoints=web"
-#      - "traefik.http.routers.keycloak.rule=Host(`keycloak.localhost`)"
-#      - "traefik.http.middlewares.keycloak-codespaces.stripprefix.prefixes=/keycloak"
-#      - "traefik.http.routers.keycloak-codespaces.rule=PathPrefix(`/keycloak`)"
-#      - "traefik.http.routers.keycloak-codespaces.middlewares=keycloak-codespaces@docker"
+  # Out of the box keycloak, not sure what database it is running but for now don't care
+  keycloak:
+    image: quay.io/keycloak/keycloak:20.0.3
+    container_name: keycloak
+    build:
+      context: .
+      dockerfile: ./keycloak/Dockerfile
+    command:
+      - start-dev
+      - --import-realm
+    environment:
+      KEYCLOAK_ADMIN: admin
+      KEYCLOAK_ADMIN_PASSWORD: admin
+    ports:
+      - "28080:8080"
+    volumes:
+      - ./keycloak/imports:/opt/keycloak/data/import
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.keycloak.entrypoints=web"
+      - "traefik.http.routers.keycloak.rule=Host(`keycloak.localhost`)"
+      - "traefik.http.middlewares.keycloak-codespaces.stripprefix.prefixes=/keycloak"
+      - "traefik.http.routers.keycloak-codespaces.rule=PathPrefix(`/keycloak`)"
+      - "traefik.http.routers.keycloak-codespaces.middlewares=keycloak-codespaces@docker"
 
   # MongoDB backend for play-golf
   mongodb:
     image: mongo
     container_name: mongodb
-#    build:
-#      context: .
-#      dockerfile: ./mongodb/Dockerfile
     ports:
       - "27017:27017"
-#    command: mongod --smallfiles --auth --bind_ip_all
     environment:
       MONGO_INITDB_ROOT_USERNAME: nunjo
       MONGO_INITDB_ROOT_PASSWORD: dougals
@@ -56,6 +52,8 @@ services:
 #      dockerfile: ./mongodb/import/Dockerfile
 #    depends_on:
 #      - mongodb
+#    volumes:
+#      - ./mongodb/import:/data/mongodb-import
 
   #  resource:
 #    build:
@@ -80,36 +78,36 @@ services:
 #      - "traefik.http.routers.play-golf-resource-codespaces.rule=PathPrefix(`/resources`)"
 #      - "traefik.http.routers.play-golf-resource-codespaces.middlewares=play-golf-resource-codespaces@docker"
 
-#  middleware:
-#   image: docker.io/traefik:v2.9
-#   container_name: traefik
-#   command:
-#     - "--api.insecure=true"
-#     - "--providers.docker=true"
-#     - "--providers.docker.exposedbydefault=false"
-#     - "--entrypoints.web.address=:80"
-#     - "--entrypoints.mongodb.address=:27017"
-#   ports:
-#     - "80:80"
-#     - "8080:8080"
+  middleware:
+   image: docker.io/traefik:v2.9
+   container_name: traefik
+   command:
+     - "--api.insecure=true"
+     - "--providers.docker=true"
+     - "--providers.docker.exposedbydefault=false"
+     - "--entrypoints.web.address=:80"
+     - "--entrypoints.mongodb.address=:27017"
+   ports:
+     - "80:80"
+     - "8080:8080"
 #     - "8443:443"
 #     - "27017:27017"
-#   volumes:
-#     - "/var/run/docker.sock:/var/run/docker.sock:ro"
-#   labels:
-#     - "traefik.enable=true"
-#     - "traefik.http.services.traefik.loadbalancer.server.port=9090"
-#     - "traefik.http.routers.traefik.entrypoints=web"
-#     - "traefik.http.routers.traefik.rule=Host(`traefik.localhost`)"
-#
-#  whoami:
-#    image: "traefik/whoami"
-#    container_name: "simple-service"
-#    labels:
-#      - "traefik.enable=true"
-#      - "traefik.http.routers.whoami.entrypoints=web"
-#      - "traefik.http.routers.whoami.rule=Host(`whoami.localhost`)"
-#      - "traefik.http.middlewares.whoami-codespaces.stripprefix.prefixes=/whoami"
-#      - "traefik.http.routers.whoami-codespaces.rule=PathPrefix(`/whoami`)"
-#      - "traefik.http.routers.whoami-codespaces.middlewares=whoami-codespaces@docker"
+   volumes:
+     - "/var/run/docker.sock:/var/run/docker.sock:ro"
+   labels:
+     - "traefik.enable=true"
+     - "traefik.http.services.traefik.loadbalancer.server.port=9090"
+     - "traefik.http.routers.traefik.entrypoints=web"
+     - "traefik.http.routers.traefik.rule=Host(`traefik.localhost`)"
+
+  whoami:
+    image: "traefik/whoami"
+    container_name: "simple-service"
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.whoami.entrypoints=web"
+      - "traefik.http.routers.whoami.rule=Host(`whoami.localhost`)"
+      - "traefik.http.middlewares.whoami-codespaces.stripprefix.prefixes=/whoami"
+      - "traefik.http.routers.whoami-codespaces.rule=PathPrefix(`/whoami`)"
+      - "traefik.http.routers.whoami-codespaces.middlewares=whoami-codespaces@docker"
 
