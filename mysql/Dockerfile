@@ -12,4 +12,4 @@ COPY mysql/conf/mysql.cnf /etc/mysql/conf.d/
 COPY mysql/sql/init.sql /tmp/
 
 ## Annoying lack of ll
-#RUN echo 'alias ll="ls -la --color"' >> ~/.bashrc
+RUN echo 'alias ll="ls -la --color"' >> ~/.bashrc

@@ -29,8 +29,11 @@ services:
 
   # MongoDB backend for play-golf
   mongodb:
-    container_name: mongodb
     image: mongo
+    container_name: mongodb
+#    build:
+#      context: .
+#      dockerfile: ./mongodb/Dockerfile
     ports:
       - "27017:27017"
 #    command: mongod --smallfiles --auth --bind_ip_all
@@ -39,6 +42,8 @@ services:
       MONGO_INITDB_ROOT_PASSWORD: dougals
     volumes:
       - ./data/mongodb:/data/mongodb
+      - ./mongodb/import:/data/import
+      - ./mongodb/script:/docker-entrypoint-initdb.d
     labels:
       - "traefik.enable=true"
       - 'traefik.tcp.routers.mongo.rule=HostSNI(`*`)'
