@@ -11,6 +11,7 @@ db.createUser({
 
 db = new Mongo().getDB("play_golf");
 
+// Initialize empty collections just to see that this works...
 db.createCollection('users', { capped: false });
 db.createCollection('courses', { capped: false });
 db.createCollection('events', { capped: false });
