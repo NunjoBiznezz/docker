@@ -11,14 +11,14 @@ services:
       dockerfile: ./keycloak/Dockerfile
     command:
       - start-dev
-#      - --import-realm
+      - --import-realm
     environment:
       KEYCLOAK_ADMIN: admin
       KEYCLOAK_ADMIN_PASSWORD: admin
     ports:
       - "8080:8080"
     volumes:
-      - ./keycloak/realm.json:/opt/keycloak/data/import/realm.json
+      - ./keycloak/imports:/opt/keycloak/data/import
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.keycloak.entrypoints=web"
